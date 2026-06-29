@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Condition check DEMO</title>
+        <script>
+            function check_num()
+            {
+                let number = document.getElementById("num").value;
+                if(number%2 == 0)
+                {
+                    //alert("even");
+                    document.getElementById("result").value = "Even Number";
+                    console.log("even block "+number);
+                }
+                else
+                {
+                    //alert("odd");
+                    document.getElementById("result").value = "Odd Number";
+                    console.log("odd block "+number);
+                }   
+            }
+        </script>
+    </head>
+<body>
+
+<h2>Check Number</h2>
+Enter Number : <input type="text" id="num">
+
+<button type="button" onclick="check_num()">Click me!</button> </br></br>
+
+Check Result : <input type="text" id="result" value="Result" readonly="true">
+
+</body>
+</html> 

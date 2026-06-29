@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+content="width=device-width,
+initial-scale=1.0">
+    <title>Udhar Khata Ragister</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+  <h1>💙 Udhar Khata Register</h1>
+  <p>Monthly Ledger System</p>
+</header>
+
+<!-- FORM -->
+<div class="card">
+  <input type="text" id="Name" placeholder="Customer Name">
+
+  <input type="date" id="Date" >
+
+  <input type="number" id="amount" placeholder="Amount">
+
+  <input type="text" id="details" placeholder="Details (e.g. Goods/Cash)">
+
+  <input type="number" id="returnAmount" placeholder="Return Amount">
+
+  <input type="date" id="returnDate">
+
+  <input type="number" id="mobile" placeholder="mobile Number">
+
+  <input type="text" id="signature" placeholder="Signature">
+
+  <button onclick="addEntry()">➕ Add Entry</button>
+  <button onclick="downloadPDF()">
+    download PDF</button>
+  <button onclick="shareWhatsApp()">📲 Share on WhatsApp</button>
+</div>
+
+<!-- SUMMARY -->
+<div class="summary">
+  <div>💰 Udhar: <span id="totalUdhar">0</span></div>
+  <div>💵 Return: <span id="totalReturn">0</span></div>
+  <div>🧮 Balance: <span id="balance">0</span></div>
+</div>
+<input
+  type="text"
+  id="search"
+  placeholder="🔍 Customer Search"
+  onkeyup="searchCustomer()">
+<button onclick=" customerHistory()">
+  customer History</button>
+</button>
+
+<!-- TABLE -->
+<div class="table-container">
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Date</th>
+  <th>Amount</th>
+  <th>Details</th>
+  <th>Return</th>
+  <th>Return Date</th>
+  <th>Balance</th>
+  <th>Mobile</th>
+  <th>Signature</th>
+  <th>Action</th>
+</tr>
+</thead>
+<tbody id="tableBody"></tbody>
+</table>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

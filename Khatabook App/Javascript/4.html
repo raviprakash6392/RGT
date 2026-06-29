@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Alert demo</title>
+        <script>
+            function hello()
+            {
+                var bcolor = document.getElementById("color").value;
+
+                if(bcolor == "red"){
+                    document.getElementById("body").style.backgroundColor = "red";
+                }
+                else if(bcolor == "green"){
+                    document.getElementById("body").style.backgroundColor = "green";
+                }
+                else{
+                    document.getElementById("body").style.backgroundColor = "yellow";
+                }
+            }
+        </script>
+    </head>
+<body id="body">
+
+<h2>Alert demo</h2>
+Enter background color : <input type="text" id="color">
+<button type="button" onclick="hello()">Click me!</button>
+
+</body>
+</html> 

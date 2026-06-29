@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <title>Sritch case demo</title>
+    <script>
+        function check_day()
+        {
+            let day = Number(document.getElementById("num").value);
+            switch(day) 
+            {
+                case 1:
+                    console.log("Monday");
+                    document.getElementById("result").value = "Monday";
+                    break;
+                case 2:
+                    console.log("Tuesday");
+                    document.getElementById("result").value = "Tuesday";
+                    break;
+                case 3:
+                    console.log("Wednesday");
+                    document.getElementById("result").value = "Wednesday";
+                    break;
+                case 4:
+                    console.log("Thursday");
+                    document.getElementById("result").value = "Thursday";
+                    break;
+                case 5:
+                    console.log("Friday");
+                    document.getElementById("result").value = "Friday";
+                    break;
+                case 6:
+                    console.log("Saturday");
+                    document.getElementById("result").value = "Saturday";
+                    break;
+                case 7:
+                    console.log("Sunday");
+                    document.getElementById("result").value = "Sunday";
+                    break;
+                default:
+                    console.log("Invalid day nunber");
+                    document.getElementById("result").value = "Invalid entry";
+            }
+        }
+        
+    </script>
+    <body>
+        <h2>Check Day</h2>
+        Enter Number : <input type="text" id="num">
+
+        <button type="button" onclick="check_day()">Click me!</button> </br></br>
+
+        Check Result : <input type="text" id="result" value="Result" readonly="true">
+    </body>
+</html>

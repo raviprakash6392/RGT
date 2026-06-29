@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard - Demo</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa4b2;
+      --accent:#06b6d4;
+      --accent-2:#7c3aed;
+      --glass: rgba(255,255,255,0.04);
+      --success:#10b981;
+      --danger:#ef4444;
+      --text:#e6eef6;
+      --radius:12px;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background: linear-gradient(180deg,#071023 0%, #07172a 100%);
+      color:var(--text);
+      font-size:14px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      min-height:100vh;
+      display:flex;
+    }
+
+    /* Sidebar */
+    .sidebar{
+      width:260px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:22px;
+      border-right:1px solid rgba(255,255,255,0.03);
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:6px;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:10px;
+      background: linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:flex;align-items:center;justify-content:center;font-weight:700;
+      box-shadow: 0 6px 18px rgba(124,58,237,0.12);
+    }
+    .brand h1{font-size:16px;margin:0}
+    .brand p{margin:0;font-size:12px;color:var(--muted)}
+
+    .nav{
+      display:flex;flex-direction:column;gap:6px;
+    }
+    .nav a{
+      display:flex;gap:12px;align-items:center;padding:10px;border-radius:10px;color:var(--muted);
+      text-decoration:none;font-weight:500;
+    }
+    .nav a.active, .nav a:hover{background:var(--glass); color:var(--text)}
+
+    /* Main content */
+    .main{
+      flex:1;padding:22px;overflow:auto;
+    }
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;
+    }
+    .search{
+      background:var(--card);padding:10px 14px;border-radius:10px;display:flex;gap:10px;align-items:center;width:420px;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .search input{background:transparent;border:0;color:var(--text);outline:none;width:100%}
+    .actions{display:flex;align-items:center;gap:12px}
+    .btn{
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      padding:9px 12px;border-radius:10px;color:white;font-weight:600;border:0;cursor:pointer;
+      box-shadow:0 8px 20px rgba(7,16,36,0.6);
+    }
+    .user{
+      display:flex;align-items:center;gap:10px;background:var(--card);padding:8px 10px;border-radius:12px;
+    }
+    .avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#ffd6a5,#ff7eb6);display:inline-block}
+
+    /* Grid */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12,1fr);
+      gap:16px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:18px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+    }
+
+    /* KPI cards */
+    .kpi{
+      grid-column: span 3;
+      display:flex;flex-direction:column;gap:10px;
+    }
+    .kpi .value{font-size:20px;font-weight:700}
+    .kpi .label{color:var(--muted);font-size:12px}
+    .small{font-size:12px;color:var(--muted)}
+
+    /* Larger spans */
+    .span-6{grid-column: span 6;}
+    .span-8{grid-column: span 8;}
+    .span-4{grid-column: span 4;}
+    .span-12{grid-column: span 12;}
+
+    /* Table */
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:12px;text-align:left;border-bottom:1px dashed rgba(255,255,255,0.03)}
+    th{color:var(--muted);font-size:12px;font-weight:600}
+    td{color:var(--text)}
+
+    /* responsive */
+    @media (max-width:980px){
+      .sidebar{display:none}
+      .grid{grid-template-columns: repeat(6,1fr)}
+      .kpi{grid-column: span 3}
+      .span-6{grid-column: span 6}
+      .span-8{grid-column: span 6}
+      .span-4{grid-column: span 3}
+    }
+    @media (max-width:560px){
+      .topbar{flex-direction:column;align-items:flex-start;gap:10px}
+      .search{width:100%}
+      .grid{grid-template-columns: repeat(2,1fr)}
+      .kpi{grid-column: span 2}
+      .span-6{grid-column: span 2}
+      .span-4{grid-column: span 2}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" aria-label="Primary">
+    <div class="brand">
+      <div class="logo">DS</div>
+      <div>
+        <h1>Demo Dashboard</h1>
+        <p>Real-time analytics</p>
+      </div>
+    </div>
+
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#" class="active">Dashboard</a>
+      <a href="#">Analytics</a>
+      <a href="#">Reports</a>
+      <a href="#">Settings</a>
+      <a href="#">Help</a>
+    </nav>
+
+    <div style="margin-top:auto;">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Workspace</div>
+      <div class="card" style="padding:12px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-weight:700">Acme Corp</div>
+          <div class="small">Plan: Pro</div>
+        </div>
+        <button class="btn" style="padding:8px 10px;font-size:13px">Upgrade</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="search" role="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="opacity:0.8"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/></svg>
+          <input type="search" placeholder="Search..." aria-label="Search dashboard" />
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <div style="background:rgba(255,255,255,0.02);padding:8px;border-radius:10px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 7h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M6 11h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M9 15h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="downloadBtn">Export</button>
+        <div class="user" title="Account">
+          <div class="avatar" aria-hidden="true"></div>
+          <div style="display:flex;flex-direction:column">
+            <div style="font-weight:700;font-size:13px">Asha</div>
+            <div style="font-size:12px;color:var(--muted)">Admin</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid content -->
+    <section class="grid" aria-live="polite">
+      <!-- KPIs -->
+      <div class="card kpi">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="small">Total Revenue</div>
+            <div class="value">₹ 1,24,560</div>
+            <div class="small" style="margin-top:6px;color:var(--muted)">+12.4% vs last month</div>
+          </div>
+          <div style="background:rgba(6,182,212,0.12);padding:10px;border-radius:10px;color:var(--accent)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 12h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="card kpi">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="small">Active Users</div>
+            <div class="value">3,842</div>
+            <div class="small" style="margin-top:6px;color:var(--muted)">+4.1% (7d)</div>
+          </div>
+          <div style="background:rgba(124,58,237,0.12);padding:10px;border-radius:10px;color:var(--accent-2)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 4v16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 12h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="card kpi">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="small">New Orders</div>
+            <div class="value">528</div>
+            <div class="small" style="margin-top:6px;color:var(--muted)">-2.3% (7d)</div>
+          </div>
+          <div style="background:rgba(16,185,129,0.08);padding:10px;border-radius:10px;color:var(--success)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 12h6l3 3 9-9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="card kpi">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="small">Churn Rate</div>
+            <div class="value">3.4%</div>
+            <div class="small" style="margin-top:6px;color:var(--muted)">Stable</div>
+          </div>
+          <div style="background:rgba(239,68,68,0.06);padding:10px;border-radius:10px;color:var(--danger)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 5v14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="card span-8">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div>
+            <div style="font-weight:700">Revenue (Last 12 months)</div>
+            <div class="small">Monthly performance</div>
+          </div>
+          <div class="small">₹ in thousands</div>
+        </div>
+        <canvas id="lineChart" height="120"></canvas>
+      </div>
+
+      <div class="card span-4">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div>
+            <div style="font-weight:700">Traffic Sources</div>
+            <div class="small">Where users are coming from</div>
+          </div>
+          <div class="small">Share</div>
+        </div>
+        <canvas id="doughnutChart" height="200"></canvas>
+      </div>
+
+      <!-- Table + Activity -->
+      <div class="card span-8">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div>
+            <div style="font-weight:700">Recent Orders</div>
+            <div class="small">Most recent 8 orders</div>
+          </div>
+          <div class="small">Status</div>
+        </div>
+
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr><th>Order ID</th><th>Customer</th><th>Date</th><th>Amount</th><th>Status</th></tr>
+            </thead>
+            <tbody id="ordersTable">
+              <!-- populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card span-4">
+        <div>
+          <div style="font-weight:700">Live Activity</div>
+          <div class="small" style="margin-bottom:12px">Latest user events</div>
+
+          <ul id="activityList" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
+            <!-- populated by JS -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- Full width -->
+      <div class="card span-12" style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-weight:700">Monthly Report</div>
+          <div class="small">Summary and action items</div>
+        </div>
+        <div class="small" id="generatedAt">Generated: —</div>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    // ---------- Sample Data ----------
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const revenue = [12.3,14.5,13.6,15.8,18.2,20.1,21.7,23.4,22.0,24.5,26.3,28.0]; // in thousands
+
+    const traffic = {
+      labels: ["Organic","Paid","Referral","Direct","Social"],
+      data: [45,18,12,20,5]
+    };
+
+    const orders = [
+      {id:"OD-1001", name:"Ravi Kumar", date:"2025-09-28", amount:"₹4,500", status:"Shipped"},
+      {id:"OD-1002", name:"Meera Patel", date:"2025-09-27", amount:"₹7,200", status:"Processing"},
+      {id:"OD-1003", name:"Amit Singh", date:"2025-09-26", amount:"₹2,100", status:"Delivered"},
+      {id:"OD-1004", name:"Priya Sharma", date:"2025-09-25", amount:"₹9,900", status:"Cancelled"},
+      {id:"OD-1005", name:"Arjun Rao", date:"2025-09-24", amount:"₹1,500", status:"Delivered"},
+      {id:"OD-1006", name:"Sana Khan", date:"2025-09-23", amount:"₹6,750", status:"Processing"},
+      {id:"OD-1007", name:"Vikram", date:"2025-09-22", amount:"₹3,300", status:"Shipped"},
+      {id:"OD-1008", name:"Nisha", date:"2025-09-20", amount:"₹5,200", status:"Delivered"}
+    ];
+
+    const activities = [
+      {text:"New user signup — Anjali", time:"2m ago"},
+      {text:"Order OD-1009 placed — ₹3,400", time:"8m ago"},
+      {text:"Payment failed — user Vikram", time:"21m ago"},
+      {text:"Export generated", time:"1h ago"}
+    ];
+
+    // ---------- Render Charts ----------
+    const lineCtx = document.getElementById('lineChart').getContext('2d');
+    const lineChart = new Chart(lineCtx, {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [{
+          label: 'Revenue (₹k)',
+          data: revenue,
+          borderColor: 'rgba(6,182,212,1)',
+          backgroundColor: createGradient(lineCtx),
+          tension: 0.28,
+          pointRadius:4,
+          pointBackgroundColor: 'white',
+          pointBorderColor: 'rgba(6,182,212,1)',
+          pointHoverRadius:6
+        }]
+      },
+      options: {
+        plugins:{legend:{display:false}},
+        scales:{
+          y:{grid:{color:'rgba(255,255,255,0.03)'}, ticks:{color:'var(--muted)'}},
+          x:{grid:{display:false}, ticks:{color:'var(--muted)'}}
+        },
+        maintainAspectRatio:false
+      }
+    });
+
+    function createGradient(ctx){
+      const gradient = ctx.createLinearGradient(0,0,0,300);
+      gradient.addColorStop(0,"rgba(6,182,212,0.18)");
+      gradient.addColorStop(1,"rgba(6,182,212,0.02)");
+      return gradient;
+    }
+
+    const doughnutCtx = document.getElementById('doughnutChart').getContext('2d');
+    const doughnutChart = new Chart(doughnutCtx,{
+      type:'doughnut',
+      data:{
+        labels: traffic.labels,
+        datasets:[{
+          data: traffic.data,
+          backgroundColor: [
+            'rgba(99,102,241,0.9)',
+            'rgba(6,182,212,0.9)',
+            'rgba(249,115,22,0.9)',
+            'rgba(16,185,129,0.9)',
+            'rgba(99,102,241,0.45)'
+          ],
+          hoverOffset:8
+        }]
+      },
+      options:{
+        plugins:{legend:{position:'bottom',labels:{color:'var(--muted)'}}},
+        maintainAspectRatio:false
+      }
+    });
+
+    // ---------- Populate Table & Activity ----------
+    const ordersTable = document.getElementById('ordersTable');
+    orders.forEach(o=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = \`
+        <td>\${o.id}</td>
+        <td>\${o.name}</td>
+        <td>\${o.date}</td>
+        <td style="font-weight:600">\${o.amount}</td>
+        <td>\${statusBadge(o.status)}</td>
+      \`;
+      ordersTable.appendChild(tr);
+    });
+
+    function statusBadge(s){
+      const color = s === 'Delivered' ? 'var(--success)' : s === 'Cancelled' ? 'var(--danger)' : 'var(--muted)';
+      return '<span style="padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.02);color:'+color+';font-weight:600;font-size:13px">'+s+'</span>';
+    }
+
+    const activityList = document.getElementById('activityList');
+    activities.forEach(a=>{
+      const li = document.createElement('li');
+      li.style.display='flex';
+      li.style.justifyContent='space-between';
+      li.style.alignItems='center';
+      li.style.gap='8px';
+      li.innerHTML = '<div style="display:flex;gap:10px;align-items:center"><div style="width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2))"></div><div><div style="font-weight:600">'+a.text+'</div><div style="font-size:12px;color:var(--muted)">'+a.time+'</div></div></div>';
+      activityList.appendChild(li);
+    });
+
+    // ---------- Misc ----------
+    document.getElementById('generatedAt').textContent = "Generated: " + new Date().toLocaleString();
+
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      // Simple export: capture table as CSV
+      const rows = Array.from(document.querySelectorAll('#ordersTable tr')).map(tr =>
+        Array.from(tr.cells).map(td => td.innerText.replace(/\\n/g,' ').trim()).join(',')
+      );
+      const csv = 'Order ID,Customer,Date,Amount,Status\\n' + rows.join('\\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'orders.csv'; document.body.appendChild(a); a.click();
+      setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},1500);
+    });
+
+    // Accessibility: simple keyboard shortcut to focus search (press /)
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '/') {
+        e.preventDefault();
+        document.querySelector('.search input').focus();
+      }
+    });
+
+  </script>
+
+</body>
+</html>

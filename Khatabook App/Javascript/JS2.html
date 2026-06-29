@@ -1,0 +1,36 @@
+<script>
+// Data Types Example with India Gate Background
+const cgpa = 8.5;
+const city = "Gorakhpur";
+const score = 95;
+const isStudent = true;
+
+// Create a styled div with background image
+document.write(`
+  <div style="
+    background: url('mandir.jpg');
+    background-size: cover;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-shadow: 1px 1px 3px black;
+    width: 500px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  ">
+    <h2 style="background: rgba(0,0,0,0.7); padding: 5px 15px; border-radius: 5px;"> StudentInformation</h2>
+    <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 8px;">
+      <p>📍 City: ${city}</p>
+      <p>🎯 score: ${score}</p>
+      <p>🎓 Is Student: ${isStudent ? 'Yes' : 'No'}</p>
+      <p>📊 CGPA: ${cgpa.toFixed(1)}</p>
+    </div>
+  </div>
+`);
+
+// Console output remains same
+console.log({cgpa, city, score, isStudent});
+</script>
